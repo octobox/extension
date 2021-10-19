@@ -1,0 +1,23 @@
+{
+  "manifest_version": 2,
+  "name": "Octobox",
+  "version": "0.0.1",
+
+  "description": "Integrate Octobox directly into your GitHub workflow",
+  "developer": {
+    "name": "Andrew Nesbitt",
+    "url": "https://github.com/andrew"
+  }
+  "icons": {
+    "48": "icons/octobox-48.png",
+    "96": "icons/octobox-96.png"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["*://*.github.com/*"],
+      "js": ["octobox.js"]
+    }
+  ]
+
+}
