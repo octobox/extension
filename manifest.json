@@ -16,7 +16,8 @@
   "content_scripts": [
     {
       "matches": ["*://*.github.com/*"],
-      "js": ["octobox.js"]
+      "js": ["octobox.js"],
+      "css": ["octobox.css"]
     }
   ],
 
