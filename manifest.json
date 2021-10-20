@@ -18,6 +18,9 @@
       "matches": ["*://*.github.com/*"],
       "js": ["octobox.js"]
     }
-  ]
+  ],
 
+  "permissions": [
+    "*://octobox.io/*"
+  ]
 }
