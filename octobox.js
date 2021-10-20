@@ -15,7 +15,65 @@ function isActionablePage() {
 function activate() {
   if(isActionablePage()){
     console.log('Octobox: Activate!!!')
+    authenticate()
+    lookup()
   }
+}
+
+function authenticate() {
+  // TODO handle failure properly
+  // TODO store token somewhere
+  fetch('https://octobox.io/users/profile.json')
+   .then(resp => resp.json())
+   .then( json => console.log('Octobox:',json))
+   .catch( error => console.error(error))
+}
+
+function markAsRead(notification) {
+  if(!notification.unread){ return }
+  fetch('https://octobox.io/notifications/mark_read_selected.json?id='+notification.id, {
+    method: "POST",
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-Octobox-API': 'true'
+      }
+    })
+    .then( resp => console.log('markAsRead', resp))
+    .catch( error => console.error(error))
+}
+
+function lookup() {
+  // TODO store current
+  fetch('https://octobox.io/notifications/lookup?url='+window.location)
+   .then(resp => resp.json())
+   .then( json => render(json))
+   .catch( error => console.error(error))
+}
+
+function render(notification) {
+  console.log('Rendering notification', notification)
+
+  var octoboxRoot = document.getElementById('octobox-root');
+  if(!octoboxRoot){
+    // create it
+    document.body.style.margin = "0 0 60px 0";
+    var div = document.createElement("div");
+    div.setAttribute("id", "octobox-root");
+    document.body.appendChild(div);
+    div.classList.add("octobox")
+    div.innerText = "I'M THE OCTOBOX!!!!";
+  }
+
+  // mark notification as read
+  markAsRead(notification)
+
+  // TODO archive/unarchive
+  // TODO mark as unread
+  // TODO mute
+  // TODO star
+  // TODO next/prev
+  // TODO delete
 }
 
 // load on first page load
@@ -25,23 +83,3 @@ activate()
 document.addEventListener('pjax:end', () => {
   activate()
 });
-
-// 2. check if authenticated with octobox
-
-  // attempt to load current user from octobox.io/users/profile.json
-  // if fail, get and store user token
-
-// 3. attempt to load notification for current issue/pr from octobox.io
-
-  // authenticated json request to https://octobox.io/notifications/lookup?url=*issueorpullurl*
-
-
-// 4. display octobox action bar
-
-  // actions
-
-    // archive/unarchive
-    // mute
-    // star
-    // next/prev
-    // delete
