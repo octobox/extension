@@ -55,25 +55,90 @@ function render(notification) {
   console.log('Rendering notification', notification)
 
   var octoboxRoot = document.getElementById('octobox-root');
+
   if(!octoboxRoot){
     // create it
-    document.body.style.margin = "0 0 60px 0";
-    var div = document.createElement("div");
-    div.setAttribute("id", "octobox-root");
-    document.body.appendChild(div);
-    div.classList.add("octobox")
-    div.innerText = "I'M THE OCTOBOX!!!!";
+    document.body.style.margin = "0 0 30px 0";
+    var octoboxRoot = document.createElement("div");
+    octoboxRoot.setAttribute("id", "octobox-root");
+    document.body.appendChild(octoboxRoot);
+    octoboxRoot.classList.add("octobox")
+
+    var prevBtn = document.createElement("div")
+    prevBtn.innerText = 'Previous'
+    prevBtn.classList.add("btn")
+    prevBtn.classList.add("mr-6")
+    prevBtn.setAttribute("id", "octobox-prev");
+    octoboxRoot.appendChild(prevBtn)
+
+    var starBtn = document.createElement("div")
+    starBtn.innerText = 'Star'
+    starBtn.classList.add("btn")
+    starBtn.classList.add("mx-1")
+    starBtn.classList.add("ml-6")
+    starBtn.setAttribute("id", "octobox-star");
+    octoboxRoot.appendChild(starBtn)
+
+    var archiveBtn = document.createElement("div")
+    archiveBtn.innerText = 'Archive'
+    archiveBtn.classList.add("btn")
+    archiveBtn.classList.add("mx-1")
+    archiveBtn.setAttribute("id", "octobox-archive");
+    archiveBtn.setAttribute("aria-disabled", "true");
+    octoboxRoot.appendChild(archiveBtn)
+
+    var unreadBtn = document.createElement("div")
+    unreadBtn.innerText = 'Mark as Unread'
+    unreadBtn.classList.add("btn")
+    unreadBtn.classList.add("mx-1")
+    unreadBtn.setAttribute("id", "octobox-unread");
+    unreadBtn.setAttribute("aria-disabled", "true");
+    octoboxRoot.appendChild(unreadBtn)
+
+    var muteBtn = document.createElement("div")
+    muteBtn.innerText = 'Mute'
+    muteBtn.classList.add("btn")
+    muteBtn.classList.add("mx-1")
+    muteBtn.setAttribute("id", "octobox-mute");
+    muteBtn.setAttribute("aria-disabled", "true");
+    octoboxRoot.appendChild(muteBtn)
+
+    var deleteBtn = document.createElement("div")
+    deleteBtn.innerText = 'Delete'
+    deleteBtn.classList.add("btn")
+    deleteBtn.classList.add("mx-1")
+    deleteBtn.classList.add("mr-6")
+    deleteBtn.setAttribute("id", "octobox-delete");
+    deleteBtn.setAttribute("aria-disabled", "true");
+    octoboxRoot.appendChild(deleteBtn)
+
+    var nextBtn = document.createElement("div")
+    nextBtn.innerText = 'Next'
+    nextBtn.classList.add("btn")
+    nextBtn.classList.add("ml-6")
+    nextBtn.setAttribute("id", "octobox-next");
+    octoboxRoot.appendChild(nextBtn)
   }
 
-  // mark notification as read
-  markAsRead(notification)
+  if(notification.id){
+    octoboxRoot.setAttribute('data-id', notification.id);
 
-  // TODO archive/unarchive
-  // TODO mark as unread
-  // TODO mute
-  // TODO star
-  // TODO next/prev
-  // TODO delete
+    // enable buttons
+    document.getElementById('octobox-delete').setAttribute("aria-disabled", "false");
+    document.getElementById('octobox-mute').setAttribute("aria-disabled", "false");
+    document.getElementById('octobox-unread').setAttribute("aria-disabled", "false");
+    document.getElementById('octobox-archive').setAttribute("aria-disabled", "false");
+
+    if(notification.starred){
+      document.getElementById('octobox-star').innerText = 'Unstar'
+    }
+
+    if(notification.archived){
+      document.getElementById('octobox-archive').innerText = 'Unarchive'
+    }
+
+    markAsRead(notification)
+  }
 }
 
 // load on first page load
