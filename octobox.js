@@ -51,37 +51,76 @@ function lookup() {
    .catch( error => console.error(error))
 }
 
-function star(notification) {
+function toggleStar(notification) {
   // TODO allow starring even if notification is null
   console.log('star!')
-}
 
-function unstar(notification) {
-
+  fetch('https://octobox.io/notifications/'+notification.id+'/star', {
+    method: "POST",
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-Octobox-API': 'true'
+      }
+    })
+    .then( resp => console.log('star', resp)) // Update star button
+    .catch( error => console.error('star error', error))
 }
 
 function archive(notification) {
-
+  console.log('archive!')
+  fetch('https://octobox.io/notifications/archive_selected.json?id='+notification.id, {
+    method: "POST",
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-Octobox-API': 'true'
+      }
+    })
+    .then( resp => console.log('archive', resp)) // TODO update archive button
+    .catch( error => console.error(error))
 }
 
 function unarchive(notification) {
-
-}
-
-function markAsUnread(notification) {
-
+  fetch('https://octobox.io/notifications/archive_selected.json?value=false&id='+notification.id, {
+    method: "POST",
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-Octobox-API': 'true'
+      }
+    })
+    .then( resp => console.log('unarchive', resp)) // TODO update archive button
+    .catch( error => console.error(error))
 }
 
 function mute(notification) {
   // TODO octobox.io doesn't currently know if you're muted or not
-}
-
-function subscribe(notification) {
-  // TODO octobox.io doesn't currently know if you're subscribed or not
+  console.log('mute!')
+  fetch('https://octobox.io/notifications/mute_selected.json?id='+notification.id, {
+    method: "POST",
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-Octobox-API': 'true'
+      }
+    })
+    .then( resp => console.log('mute', resp)) // TODO update mute button
+    .catch( error => console.error(error))
 }
 
 function deleteNotification(notification) {
-
+  console.log('delete!')
+  fetch('https://octobox.io/notifications/delete_selected.json?id='+notification.id, {
+    method: "POST",
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-Octobox-API': 'true'
+      }
+    })
+    .then( resp => console.log('delete', resp)) // TODO update mute button
+    .catch( error => console.error(error))
 }
 
 function next(notification) {
@@ -96,6 +135,8 @@ function render(notification) {
   console.log('Rendering notification', notification)
 
   var octoboxRoot = document.getElementById('octobox-root');
+
+  // TODO update onclicks with new notification id
 
   if(!octoboxRoot){
     // create it
@@ -131,15 +172,6 @@ function render(notification) {
     archiveBtn.onclick = function(){ archive(notification) }
     octoboxRoot.appendChild(archiveBtn)
 
-    var unreadBtn = document.createElement("div")
-    unreadBtn.innerText = 'Mark as Unread'
-    unreadBtn.classList.add("btn")
-    unreadBtn.classList.add("mx-1")
-    unreadBtn.setAttribute("id", "octobox-unread");
-    unreadBtn.setAttribute("aria-disabled", "true");
-    unreadBtn.onclick = function(){ markAsUnread(notification) }
-    octoboxRoot.appendChild(unreadBtn)
-
     var muteBtn = document.createElement("div")
     muteBtn.innerText = 'Mute'
     muteBtn.classList.add("btn")
@@ -172,19 +204,19 @@ function render(notification) {
     octoboxRoot.setAttribute('data-id', notification.id);
 
     // enable buttons
+    // TODO buttons should have onclicks when enabled
     document.getElementById('octobox-delete').setAttribute("aria-disabled", "false");
     document.getElementById('octobox-mute').setAttribute("aria-disabled", "false");
-    document.getElementById('octobox-unread').setAttribute("aria-disabled", "false");
     document.getElementById('octobox-archive').setAttribute("aria-disabled", "false");
 
     if(notification.starred){
       document.getElementById('octobox-star').innerText = 'Unstar'
-      // TODO switch onclick function to unstar
     }
 
     if(notification.archived){
       document.getElementById('octobox-archive').innerText = 'Unarchive'
       // TODO switch onclick function to unarchive
+      document.getElementById('octobox-archive').onclick = function(){ unarchive(notification) }
     }
 
     markAsRead(notification)
