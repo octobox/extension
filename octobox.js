@@ -51,6 +51,47 @@ function lookup() {
    .catch( error => console.error(error))
 }
 
+function star(notification) {
+  // TODO allow starring even if notification is null
+  console.log('star!')
+}
+
+function unstar(notification) {
+
+}
+
+function archive(notification) {
+
+}
+
+function unarchive(notification) {
+
+}
+
+function markAsUnread(notification) {
+
+}
+
+function mute(notification) {
+  // TODO octobox.io doesn't currently know if you're muted or not
+}
+
+function subscribe(notification) {
+  // TODO octobox.io doesn't currently know if you're subscribed or not
+}
+
+function deleteNotification(notification) {
+
+}
+
+function next(notification) {
+  // TODO how will this work?
+}
+
+function previous(notification) {
+  // TODO how will this work?
+}
+
 function render(notification) {
   console.log('Rendering notification', notification)
 
@@ -69,6 +110,7 @@ function render(notification) {
     prevBtn.classList.add("btn")
     prevBtn.classList.add("mr-6")
     prevBtn.setAttribute("id", "octobox-prev");
+    prevBtn.onclick = function(){ previous(notification) }
     octoboxRoot.appendChild(prevBtn)
 
     var starBtn = document.createElement("div")
@@ -77,6 +119,7 @@ function render(notification) {
     starBtn.classList.add("mx-1")
     starBtn.classList.add("ml-6")
     starBtn.setAttribute("id", "octobox-star");
+    starBtn.onclick = function(){ star(notification) }
     octoboxRoot.appendChild(starBtn)
 
     var archiveBtn = document.createElement("div")
@@ -85,6 +128,7 @@ function render(notification) {
     archiveBtn.classList.add("mx-1")
     archiveBtn.setAttribute("id", "octobox-archive");
     archiveBtn.setAttribute("aria-disabled", "true");
+    archiveBtn.onclick = function(){ archive(notification) }
     octoboxRoot.appendChild(archiveBtn)
 
     var unreadBtn = document.createElement("div")
@@ -93,6 +137,7 @@ function render(notification) {
     unreadBtn.classList.add("mx-1")
     unreadBtn.setAttribute("id", "octobox-unread");
     unreadBtn.setAttribute("aria-disabled", "true");
+    unreadBtn.onclick = function(){ markAsUnread(notification) }
     octoboxRoot.appendChild(unreadBtn)
 
     var muteBtn = document.createElement("div")
@@ -101,6 +146,7 @@ function render(notification) {
     muteBtn.classList.add("mx-1")
     muteBtn.setAttribute("id", "octobox-mute");
     muteBtn.setAttribute("aria-disabled", "true");
+    muteBtn.onclick = function(){ mute(notification) }
     octoboxRoot.appendChild(muteBtn)
 
     var deleteBtn = document.createElement("div")
@@ -110,6 +156,7 @@ function render(notification) {
     deleteBtn.classList.add("mr-6")
     deleteBtn.setAttribute("id", "octobox-delete");
     deleteBtn.setAttribute("aria-disabled", "true");
+    deleteBtn.onclick = function(){ deleteNotification(notification) }
     octoboxRoot.appendChild(deleteBtn)
 
     var nextBtn = document.createElement("div")
@@ -117,6 +164,7 @@ function render(notification) {
     nextBtn.classList.add("btn")
     nextBtn.classList.add("ml-6")
     nextBtn.setAttribute("id", "octobox-next");
+    nextBtn.onclick = function(){ next(notification) }
     octoboxRoot.appendChild(nextBtn)
   }
 
@@ -131,10 +179,12 @@ function render(notification) {
 
     if(notification.starred){
       document.getElementById('octobox-star').innerText = 'Unstar'
+      // TODO switch onclick function to unstar
     }
 
     if(notification.archived){
       document.getElementById('octobox-archive').innerText = 'Unarchive'
+      // TODO switch onclick function to unarchive
     }
 
     markAsRead(notification)
