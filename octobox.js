@@ -109,6 +109,10 @@ function mute(notification) {
     .catch( error => console.error(error))
 }
 
+function subscribe(notification) {
+  // TODO octobox.io doesn't know how to subscribe to something it's not seen yet
+}
+
 function deleteNotification(notification) {
   console.log('delete!')
   fetch('https://octobox.io/notifications/delete_selected.json?id='+notification.id, {
@@ -138,92 +142,104 @@ function render(notification) {
 
   // TODO update onclicks with new notification id
 
-  if(!octoboxRoot){
+  if(octoboxRoot){
+    // empty it
+    octoboxRoot.innerHTML = ''
+  } else {
     // create it
     document.body.style.margin = "0 0 30px 0";
     var octoboxRoot = document.createElement("div");
     octoboxRoot.setAttribute("id", "octobox-root");
     document.body.appendChild(octoboxRoot);
     octoboxRoot.classList.add("octobox")
-
-    var logo = document.createElement("a")
-    logo.classList.add("mr-6")
-    logo.setAttribute("id", "octobox-logo");
-    logo.setAttribute("href", "https://octobox.io");
-    octoboxRoot.appendChild(logo)
-
-    var prevBtn = document.createElement("div")
-    prevBtn.innerText = 'Previous'
-    prevBtn.classList.add("btn")
-    prevBtn.classList.add("mr-6")
-    prevBtn.setAttribute("id", "octobox-prev");
-    prevBtn.onclick = function(){ previous(notification) }
-    octoboxRoot.appendChild(prevBtn)
-
-    var starBtn = document.createElement("div")
-    starBtn.innerText = 'Star'
-    starBtn.classList.add("btn")
-    starBtn.classList.add("mx-1")
-    starBtn.classList.add("ml-6")
-    starBtn.setAttribute("id", "octobox-star");
-    starBtn.onclick = function(){ star(notification) }
-    octoboxRoot.appendChild(starBtn)
-
-    var archiveBtn = document.createElement("div")
-    archiveBtn.innerText = 'Archive'
-    archiveBtn.classList.add("btn")
-    archiveBtn.classList.add("mx-1")
-    archiveBtn.setAttribute("id", "octobox-archive");
-    archiveBtn.setAttribute("aria-disabled", "true");
-    archiveBtn.onclick = function(){ archive(notification) }
-    octoboxRoot.appendChild(archiveBtn)
-
-    var muteBtn = document.createElement("div")
-    muteBtn.innerText = 'Mute'
-    muteBtn.classList.add("btn")
-    muteBtn.classList.add("mx-1")
-    muteBtn.setAttribute("id", "octobox-mute");
-    muteBtn.setAttribute("aria-disabled", "true");
-    muteBtn.onclick = function(){ mute(notification) }
-    octoboxRoot.appendChild(muteBtn)
-
-    var deleteBtn = document.createElement("div")
-    deleteBtn.innerText = 'Delete'
-    deleteBtn.classList.add("btn")
-    deleteBtn.classList.add("mx-1")
-    deleteBtn.classList.add("mr-6")
-    deleteBtn.setAttribute("id", "octobox-delete");
-    deleteBtn.setAttribute("aria-disabled", "true");
-    deleteBtn.onclick = function(){ deleteNotification(notification) }
-    octoboxRoot.appendChild(deleteBtn)
-
-    var nextBtn = document.createElement("div")
-    nextBtn.innerText = 'Next'
-    nextBtn.classList.add("btn")
-    nextBtn.classList.add("ml-6")
-    nextBtn.setAttribute("id", "octobox-next");
-    nextBtn.onclick = function(){ next(notification) }
-    octoboxRoot.appendChild(nextBtn)
   }
+
+  var logo = document.createElement("a")
+  logo.classList.add("mr-6")
+  logo.setAttribute("id", "octobox-logo");
+  logo.setAttribute("href", "https://octobox.io");
+  octoboxRoot.appendChild(logo)
+
+  var prevBtn = document.createElement("div")
+  prevBtn.innerText = 'Previous'
+  prevBtn.classList.add("btn")
+  prevBtn.classList.add("mr-6")
+  prevBtn.setAttribute("id", "octobox-prev");
+  prevBtn.onclick = function(){ previous(notification) }
+  octoboxRoot.appendChild(prevBtn)
+
+  var starBtn = document.createElement("div")
+  if(notification.starred){
+    starBtn.innerText = 'Unstar'
+  } else {
+    starBtn.innerText = 'Star'
+  }
+  starBtn.classList.add("btn")
+  starBtn.classList.add("mx-1")
+  starBtn.classList.add("ml-6")
+  starBtn.setAttribute("id", "octobox-star");
+  starBtn.onclick = function(){ star(notification) }
+  // TODO switch button text and icon on change
+  octoboxRoot.appendChild(starBtn)
+
+  var archiveBtn = document.createElement("div")
+
+  archiveBtn.classList.add("btn")
+  archiveBtn.classList.add("mx-1")
+  archiveBtn.setAttribute("id", "octobox-archive");
+  archiveBtn.innerText = 'Archive'
+  if(notification.id){
+    if(notification.archived){
+      archiveBtn.innerText = 'Unarchive'
+      // TODO switch button text and icon on change
+      archiveBtn.onclick = function(){ unarchive(notification) }
+    } else {
+      archiveBtn.onclick = function(){ archive(notification) }
+    }
+  } else {
+    archiveBtn.classList.add("disable")
+  }
+  octoboxRoot.appendChild(archiveBtn)
+
+  var muteBtn = document.createElement("div")
+  muteBtn.classList.add("btn")
+  muteBtn.classList.add("mx-1")
+  if(notification.id){
+    muteBtn.setAttribute("id", "octobox-mute");
+    muteBtn.innerText = 'Mute'
+    muteBtn.onclick = function(){ mute(notification) }
+  } else {
+    muteBtn.innerText = 'Subscribe'
+    muteBtn.setAttribute("id", "octobox-subscribe");
+    muteBtn.onclick = function(){ subscribe(notification) }
+  }
+  octoboxRoot.appendChild(muteBtn)
+
+  var deleteBtn = document.createElement("div")
+  deleteBtn.innerText = 'Delete'
+  deleteBtn.classList.add("btn")
+  deleteBtn.classList.add("mx-1")
+  deleteBtn.classList.add("mr-6")
+  deleteBtn.setAttribute("id", "octobox-delete");
+  if(notification.id){
+    // TODO after deleting, disable all the buttons
+    deleteBtn.onclick = function(){ deleteNotification(notification) }
+  } else {
+    deleteBtn.classList.add("disable")
+  }
+  octoboxRoot.appendChild(deleteBtn)
+
+  var nextBtn = document.createElement("div")
+  nextBtn.innerText = 'Next'
+  nextBtn.classList.add("btn")
+  nextBtn.classList.add("ml-6")
+  nextBtn.setAttribute("id", "octobox-next");
+  nextBtn.onclick = function(){ next(notification) }
+  octoboxRoot.appendChild(nextBtn)
+
 
   if(notification.id){
     octoboxRoot.setAttribute('data-id', notification.id);
-
-    // enable buttons
-    // TODO buttons should have onclicks when enabled
-    document.getElementById('octobox-delete').setAttribute("aria-disabled", "false");
-    document.getElementById('octobox-mute').setAttribute("aria-disabled", "false");
-    document.getElementById('octobox-archive').setAttribute("aria-disabled", "false");
-
-    if(notification.starred){
-      document.getElementById('octobox-star').innerText = 'Unstar'
-    }
-
-    if(notification.archived){
-      document.getElementById('octobox-archive').innerText = 'Unarchive'
-      // TODO switch onclick function to unarchive
-      document.getElementById('octobox-archive').onclick = function(){ unarchive(notification) }
-    }
 
     markAsRead(notification)
   }

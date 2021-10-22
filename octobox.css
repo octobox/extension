@@ -19,6 +19,12 @@
   padding-left: 34px;
 }
 
+.octobox .btn.disable {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+
 #octobox-star {
   background-image: url(icons/star-16.svg);
 }
@@ -27,6 +33,9 @@
 }
 #octobox-mute {
   background-image: url(icons/mute-16.svg);
+}
+#octobox-subscribe {
+  background-image: url(icons/eye-16.svg);
 }
 #octobox-delete {
   background-image: url(icons/trash-16.svg);
