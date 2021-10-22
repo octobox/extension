@@ -80,7 +80,10 @@ function archive(notification) {
         'X-Octobox-API': 'true'
       }
     })
-    .then( resp => console.log('archive', resp)) // TODO update archive button
+    .then( resp => {
+      notification.archived = !notification.archived;
+      render(notification)
+    })
     .catch( error => console.error(error))
 }
 
@@ -93,7 +96,10 @@ function unarchive(notification) {
         'X-Octobox-API': 'true'
       }
     })
-    .then( resp => console.log('unarchive', resp)) // TODO update archive button
+    .then( resp => {
+      notification.archived = !notification.archived;
+      render(notification)
+    })
     .catch( error => console.error(error))
 }
 
@@ -126,7 +132,7 @@ function deleteNotification(notification) {
         'X-Octobox-API': 'true'
       }
     })
-    .then( resp => console.log('delete', resp)) // TODO update mute button
+    .then( resp => render({})) // TODO update mute button
     .catch( error => console.error(error))
 }
 
@@ -195,6 +201,7 @@ function render(notification) {
   if(notification.id){
     if(notification.archived){
       archiveBtn.innerText = 'Unarchive'
+      archiveBtn.setAttribute("id", "octobox-unarchive");
       // TODO switch button text and icon on change
       archiveBtn.onclick = function(){ unarchive(notification) }
     } else {

@@ -34,6 +34,9 @@
 #octobox-archive {
   background-image: url(icons/archive-16.svg);
 }
+#octobox-unarchive {
+  background-image: url(icons/inbox-16.svg);
+}
 #octobox-mute {
   background-image: url(icons/mute-16.svg);
 }
