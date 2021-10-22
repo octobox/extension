@@ -146,6 +146,12 @@ function render(notification) {
     document.body.appendChild(octoboxRoot);
     octoboxRoot.classList.add("octobox")
 
+    var logo = document.createElement("a")
+    logo.classList.add("mr-6")
+    logo.setAttribute("id", "octobox-logo");
+    logo.setAttribute("href", "https://octobox.io");
+    octoboxRoot.appendChild(logo)
+
     var prevBtn = document.createElement("div")
     prevBtn.innerText = 'Previous'
     prevBtn.classList.add("btn")
