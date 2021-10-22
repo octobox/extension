@@ -63,7 +63,10 @@ function toggleStar(notification) {
         'X-Octobox-API': 'true'
       }
     })
-    .then( resp => console.log('star', resp)) // Update star button
+    .then( resp => {
+      notification.starred = !notification.starred;
+      render(notification)
+    })
     .catch( error => console.error('star error', error))
 }
 
@@ -171,15 +174,16 @@ function render(notification) {
   var starBtn = document.createElement("div")
   if(notification.starred){
     starBtn.innerText = 'Unstar'
+    starBtn.setAttribute("id", "octobox-unstar");
   } else {
     starBtn.innerText = 'Star'
+    starBtn.setAttribute("id", "octobox-star");
   }
   starBtn.classList.add("btn")
   starBtn.classList.add("mx-1")
   starBtn.classList.add("ml-6")
-  starBtn.setAttribute("id", "octobox-star");
-  starBtn.onclick = function(){ star(notification) }
-  // TODO switch button text and icon on change
+
+  starBtn.onclick = function(){ toggleStar(notification) }
   octoboxRoot.appendChild(starBtn)
 
   var archiveBtn = document.createElement("div")

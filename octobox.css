@@ -28,6 +28,9 @@
 #octobox-star {
   background-image: url(icons/star-16.svg);
 }
+#octobox-unstar {
+  background-image: url(icons/star-fill-16.svg);
+}
 #octobox-archive {
   background-image: url(icons/archive-16.svg);
 }
