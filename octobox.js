@@ -22,7 +22,6 @@ function activate() {
 
 function authenticate() {
   // TODO handle failure properly
-  // TODO store token somewhere
   fetch('https://octobox.io/users/profile.json')
    .then(resp => resp.json())
    .then( json => console.log('Octobox:',json))
@@ -44,7 +43,6 @@ function markAsRead(notification) {
 }
 
 function lookup() {
-  // TODO store current
   fetch('https://octobox.io/notifications/lookup?url='+window.location)
    .then(resp => resp.json())
    .then( json => render(json))
@@ -138,18 +136,14 @@ function deleteNotification(notification) {
 
 function next(notification) {
   // TODO how will this work?
-}
-
-function previous(notification) {
-  // TODO how will this work?
+  // TODO push current notification onto a stack
+  //      for previous notifications to page back through
 }
 
 function render(notification) {
   console.log('Rendering notification', notification)
 
   var octoboxRoot = document.getElementById('octobox-root');
-
-  // TODO update onclicks with new notification id
 
   if(octoboxRoot){
     // empty it
@@ -169,12 +163,13 @@ function render(notification) {
   logo.setAttribute("href", "https://octobox.io");
   octoboxRoot.appendChild(logo)
 
-  var prevBtn = document.createElement("div")
+  var prevBtn = document.createElement("a")
   prevBtn.innerText = 'Previous'
   prevBtn.classList.add("btn")
   prevBtn.classList.add("mr-6")
   prevBtn.setAttribute("id", "octobox-prev");
-  prevBtn.onclick = function(){ previous(notification) }
+  prevBtn.classList.add("disable")
+  // TODO enable this after next button implemented
   octoboxRoot.appendChild(prevBtn)
 
   var starBtn = document.createElement("div")
@@ -202,7 +197,6 @@ function render(notification) {
     if(notification.archived){
       archiveBtn.innerText = 'Unarchive'
       archiveBtn.setAttribute("id", "octobox-unarchive");
-      // TODO switch button text and icon on change
       archiveBtn.onclick = function(){ unarchive(notification) }
     } else {
       archiveBtn.onclick = function(){ archive(notification) }
@@ -233,7 +227,6 @@ function render(notification) {
   deleteBtn.classList.add("mr-6")
   deleteBtn.setAttribute("id", "octobox-delete");
   if(notification.id){
-    // TODO after deleting, disable all the buttons
     deleteBtn.onclick = function(){ deleteNotification(notification) }
   } else {
     deleteBtn.classList.add("disable")
@@ -247,7 +240,6 @@ function render(notification) {
   nextBtn.setAttribute("id", "octobox-next");
   nextBtn.onclick = function(){ next(notification) }
   octoboxRoot.appendChild(nextBtn)
-
 
   if(notification.id){
     octoboxRoot.setAttribute('data-id', notification.id);
