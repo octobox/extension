@@ -46,10 +46,7 @@ function lookup() {
   fetch('https://octobox.io/notifications/lookup?url='+window.location)
    .then(resp => resp.json())
    .then(async json => {
-     // load info for next button
-     var nextNotification = await loadNext(json)
-
-     render(json, nextNotification)
+     render(json)
    })
    .catch( error => console.error(error))
 }
@@ -178,14 +175,10 @@ function deleteNotification(notification) {
     .catch( error => console.error(error))
 }
 
-function next(notification) {
-  // TODO how will this work?
-  // TODO push current notification onto a stack
-  //      for previous notifications to page back through
-}
-
-function render(notification, nextNotification) {
+async function render(notification) {
   console.log('Rendering notification', notification)
+
+  var nextNotification = await loadNext(notification)
 
   var octoboxRoot = document.getElementById('octobox-root');
 
