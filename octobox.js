@@ -45,8 +45,52 @@ function markAsRead(notification) {
 function lookup() {
   fetch('https://octobox.io/notifications/lookup?url='+window.location)
    .then(resp => resp.json())
-   .then( json => render(json))
+   .then(async json => {
+     // load info for next button
+     var nextNotification = await loadNext(json)
+
+     render(json, nextNotification)
+   })
    .catch( error => console.error(error))
+}
+
+async function loadNext(notification) {
+  var params = {}
+
+  if(notification){
+    if(notification.archived){
+      // TODO is it starred, if so render next in stars
+      // archived, render first in inbox
+      params = { per_page: 1 }
+    } else {
+      // TODO find next in inbox after current notification
+      params = { per_page: 100 }
+    }
+  } else {
+    // unknown, render first in inbox
+    params = { per_page: 1 }
+  }
+
+  var response = await fetch('https://octobox.io/notifications.json?'+ new URLSearchParams(params))
+  var json = await response.json()
+
+  if(params.per_page == 100){
+    if(json.notifications.length > 1){
+      // find current notification index and return index+1
+
+      var urls = json.notifications.map(n => { return n.url })
+      var index = urls.indexOf(notification.url)
+      console.log(index)
+      var nxtNotification = json.notifications[index+1]
+    } else {
+      // only found itself
+      var nxtNotification = null
+    }
+  } else {
+    var nxtNotification =  json.notifications[0]
+  }
+
+  return nxtNotification
 }
 
 function toggleStar(notification) {
@@ -140,7 +184,7 @@ function next(notification) {
   //      for previous notifications to page back through
 }
 
-function render(notification) {
+function render(notification, nextNotification) {
   console.log('Rendering notification', notification)
 
   var octoboxRoot = document.getElementById('octobox-root');
@@ -233,12 +277,22 @@ function render(notification) {
   }
   octoboxRoot.appendChild(deleteBtn)
 
-  var nextBtn = document.createElement("div")
+  var nextBtn = document.createElement("a")
   nextBtn.innerText = 'Next'
   nextBtn.classList.add("btn")
   nextBtn.classList.add("ml-6")
   nextBtn.setAttribute("id", "octobox-next");
-  nextBtn.onclick = function(){ next(notification) }
+  if(nextNotification){
+    nextBtn.classList.add('tooltipped')
+    nextBtn.classList.add('tooltipped-n')
+    nextBtn.setAttribute('aria-label', nextNotification.subject.title)
+    // TODO can this link by pjaxed to make it faster
+    nextBtn.setAttribute('rel', "preconnect")
+    nextBtn.setAttribute('href', nextNotification.web_url)
+    // TODO onclick that pushes current notification to a history stack
+  } else {
+    nextBtn.classList.add("disable")
+  }
   octoboxRoot.appendChild(nextBtn)
 
   if(notification.id){
