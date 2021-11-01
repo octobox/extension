@@ -234,7 +234,7 @@ async function render(notification) {
   if(nextNotification.previous){
     prevBtn.classList.add('tooltipped')
     prevBtn.classList.add('tooltipped-n')
-    prevBtn.setAttribute('aria-label', nextNotification.previous.subject.title)
+    prevBtn.setAttribute('aria-label', `${nextNotification.previous.repo.name}: ${nextNotification.previous.subject.title}`)
     // TODO can this link by pjaxed to make it faster
     prevBtn.setAttribute('rel', "preconnect")
     prevBtn.setAttribute('href', nextNotification.previous.web_url)
@@ -338,7 +338,7 @@ async function render(notification) {
   if(nextNotification.next){
     nextBtn.classList.add('tooltipped')
     nextBtn.classList.add('tooltipped-n')
-    nextBtn.setAttribute('aria-label', nextNotification.next.subject.title)
+    nextBtn.setAttribute('aria-label', `${nextNotification.next.repo.name}: ${nextNotification.next.subject.title}`)
     // TODO can this link by pjaxed to make it faster
     nextBtn.setAttribute('rel', "preconnect")
     nextBtn.setAttribute('href', nextNotification.next.web_url)
