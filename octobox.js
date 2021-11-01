@@ -1,5 +1,3 @@
-// content_script
-
 // TODO support github enterprise
 // TODO support self-hosted octobox instances
 
@@ -52,6 +50,7 @@ function lookup() {
 }
 
 async function loadNext(notification) {
+  // TODO also load previous
   var params = {}
 
   if(notification){
@@ -121,7 +120,12 @@ function archive(notification) {
     })
     .then( resp => {
       notification.archived = !notification.archived;
-      render(notification)
+      var nextButton = document.getElementById('octobox-next');
+      if(nextButton){
+        nextButton.click()
+      } else {
+        render(notification)
+      }
     })
     .catch( error => console.error(error))
 }
@@ -144,7 +148,6 @@ function unarchive(notification) {
 
 function mute(notification) {
   // TODO octobox.io doesn't currently know if you're muted or not
-  console.log('mute!')
   fetch('https://octobox.io/notifications/mute_selected.json?id='+notification.id, {
     method: "POST",
     headers: {
@@ -153,7 +156,14 @@ function mute(notification) {
         'X-Octobox-API': 'true'
       }
     })
-    .then( resp => console.log('mute', resp)) // TODO update mute button
+    .then( resp => {
+      var nextButton = document.getElementById('octobox-next');
+      if(nextButton){
+        nextButton.click()
+      } else {
+        render(notification)
+      }
+    })
     .catch( error => console.error(error))
 }
 
@@ -171,13 +181,18 @@ function deleteNotification(notification) {
         'X-Octobox-API': 'true'
       }
     })
-    .then( resp => render({})) // TODO update mute button
+    .then( resp => {
+      var nextButton = document.getElementById('octobox-next');
+      if(nextButton){
+        nextButton.click()
+      } else {
+        render({})
+      }
+    })
     .catch( error => console.error(error))
 }
 
 async function render(notification) {
-  console.log('Rendering notification', notification)
-
   var nextNotification = await loadNext(notification)
 
   var octoboxRoot = document.getElementById('octobox-root');
