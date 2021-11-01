@@ -147,7 +147,6 @@ function unarchive(notification) {
 }
 
 function mute(notification) {
-  // TODO octobox.io doesn't currently know if you're muted or not
   fetch('https://octobox.io/notifications/mute_selected.json?id='+notification.id, {
     method: "POST",
     headers: {
@@ -168,7 +167,7 @@ function mute(notification) {
 }
 
 function subscribe(notification) {
-  // TODO octobox.io doesn't know how to subscribe to something it's not seen yet
+  // TODO octobox.io doesn't know how to subscribe to something yet
 }
 
 function deleteNotification(notification) {
@@ -262,9 +261,19 @@ async function render(notification) {
   muteBtn.classList.add("btn")
   muteBtn.classList.add("mx-1")
   if(notification.id){
-    muteBtn.setAttribute("id", "octobox-mute");
-    muteBtn.innerText = 'Mute'
-    muteBtn.onclick = function(){ mute(notification) }
+    if(notification.muted_at){
+      muteBtn.innerText = 'Subscribe'
+      muteBtn.classList.add('tooltipped')
+      muteBtn.classList.add('tooltipped-n')
+      var muted_at = new Date(notification.muted_at)
+      muteBtn.setAttribute('aria-label', 'Muted: ' + muted_at.toISOString().slice(0, 10))
+      muteBtn.setAttribute("id", "octobox-subscribe");
+      muteBtn.onclick = function(){ subscribe(notification) }
+    } else {
+      muteBtn.setAttribute("id", "octobox-mute");
+      muteBtn.innerText = 'Mute'
+      muteBtn.onclick = function(){ mute(notification) }
+    }
   } else {
     muteBtn.innerText = 'Subscribe'
     muteBtn.setAttribute("id", "octobox-subscribe");
