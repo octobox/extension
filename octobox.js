@@ -12,7 +12,6 @@ function isActionablePage() {
 
 function activate() {
   if(isActionablePage()){
-    console.log('Octobox: Activate!!!')
     authenticate()
     lookup()
   }
@@ -22,7 +21,7 @@ function authenticate() {
   // TODO handle failure properly
   fetch('https://octobox.io/users/profile.json')
    .then(resp => resp.json())
-   .then( json => console.log('Octobox:',json))
+   .then( json => console.log('Octobox login:',json))
    .catch( error => console.error(error))
 }
 
@@ -36,7 +35,7 @@ function markAsRead(notification) {
         'X-Octobox-API': 'true'
       }
     })
-    .then( resp => console.log('markAsRead', resp))
+    .then( resp => console.log('notification marked as read', resp))
     .catch( error => console.error(error))
 }
 
@@ -70,29 +69,35 @@ async function loadNext(notification) {
   var response = await fetch('https://octobox.io/notifications.json?'+ new URLSearchParams(params))
   var json = await response.json()
 
+  var res = {
+    next: null,
+    previous: null,
+    index: null,
+    count: json.pagination.total_notifications
+  }
+
   if(params.per_page == 100){
     if(json.notifications.length > 1){
       // find current notification index and return index+1
 
       var urls = json.notifications.map(n => { return n.url })
       var index = urls.indexOf(notification.url)
-      console.log(index)
-      var nxtNotification = json.notifications[index+1]
+      res.next = json.notifications[index+1]
+      res.index = index
+      res.previous = json.notifications[index-1]
     } else {
       // only found itself
       var nxtNotification = null
     }
   } else {
-    var nxtNotification =  json.notifications[0]
+    res.next =  json.notifications[0]
   }
 
-  return nxtNotification
+  return res
 }
 
 function toggleStar(notification) {
   // TODO allow starring even if notification is null
-  console.log('star!')
-
   fetch('https://octobox.io/notifications/'+notification.id+'/star', {
     method: "POST",
     headers: {
@@ -109,7 +114,6 @@ function toggleStar(notification) {
 }
 
 function archive(notification) {
-  console.log('archive!')
   fetch('https://octobox.io/notifications/archive_selected.json?id='+notification.id, {
     method: "POST",
     headers: {
@@ -171,7 +175,6 @@ function subscribe(notification) {
 }
 
 function deleteNotification(notification) {
-  console.log('delete!')
   fetch('https://octobox.io/notifications/delete_selected.json?id='+notification.id, {
     method: "POST",
     headers: {
@@ -219,8 +222,18 @@ async function render(notification) {
   prevBtn.classList.add("btn")
   prevBtn.classList.add("mr-6")
   prevBtn.setAttribute("id", "octobox-prev");
-  prevBtn.classList.add("disable")
-  // TODO enable this after next button implemented
+
+  if(nextNotification.previous){
+    prevBtn.classList.add('tooltipped')
+    prevBtn.classList.add('tooltipped-n')
+    prevBtn.setAttribute('aria-label', nextNotification.previous.subject.title)
+    // TODO can this link by pjaxed to make it faster
+    prevBtn.setAttribute('rel', "preconnect")
+    prevBtn.setAttribute('href', nextNotification.previous.web_url)
+  } else {
+    prevBtn.classList.add("disable")
+  }
+
   octoboxRoot.appendChild(prevBtn)
 
   var starBtn = document.createElement("div")
@@ -299,14 +312,13 @@ async function render(notification) {
   nextBtn.classList.add("btn")
   nextBtn.classList.add("ml-6")
   nextBtn.setAttribute("id", "octobox-next");
-  if(nextNotification){
+  if(nextNotification.next){
     nextBtn.classList.add('tooltipped')
     nextBtn.classList.add('tooltipped-n')
-    nextBtn.setAttribute('aria-label', nextNotification.subject.title)
+    nextBtn.setAttribute('aria-label', nextNotification.next.subject.title)
     // TODO can this link by pjaxed to make it faster
     nextBtn.setAttribute('rel', "preconnect")
-    nextBtn.setAttribute('href', nextNotification.web_url)
-    // TODO onclick that pushes current notification to a history stack
+    nextBtn.setAttribute('href', nextNotification.next.web_url)
   } else {
     nextBtn.classList.add("disable")
   }
