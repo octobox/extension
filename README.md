@@ -1,10 +1,8 @@
 # Octobox Browser Extension
 
-Integrate Octobox directly into your GitHub workflow with this browser extension.
+Integrate [Octobox](https://octobox.io) directly into your GitHub workflow with this browser extension.
 
-## About
-
-TODO
+<img src="screenshot.png">
 
 ## Backers
 Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/octobox#backer)]
