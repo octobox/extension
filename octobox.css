@@ -1,6 +1,6 @@
 .octobox {
-  background-color: #fff;
-	border-top: solid 1px rgb(234, 234, 235);
+  background-color: var(--color-canvas-default);
+	border-top: solid 1px var(--color-border-muted);
 	bottom: 0;
 	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 	display: block;
@@ -13,47 +13,53 @@
 	z-index: 99999;
 }
 
-.octobox .btn{
-  background-repeat: no-repeat;
-  background-position: 10px 8px;
-  padding-left: 34px;
-}
-
 .octobox .btn.disable {
   opacity: 0.5;
   pointer-events: none;
 }
 
+.icon{
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-position: center center;
+  margin-right: 8px;
+  width: 16px;
+  height: 20px;
+  vertical-align: middle;
+}
 
-#octobox-star {
+.dark .icon{
+  filter: invert(97%) sepia(12%) saturate(241%) hue-rotate(214deg) brightness(116%) contrast(87%);
+}
+
+#octobox-star .icon{
   background-image: url(icons/star-16.svg);
 }
-#octobox-unstar {
+#octobox-unstar .icon{
   background-image: url(icons/star-fill-16.svg);
 }
-#octobox-archive {
+#octobox-archive .icon{
   background-image: url(icons/archive-16.svg);
 }
-#octobox-unarchive {
+#octobox-unarchive .icon{
   background-image: url(icons/inbox-16.svg);
 }
-#octobox-mute {
+#octobox-mute .icon{
   background-image: url(icons/mute-16.svg);
 }
-#octobox-subscribe {
+#octobox-subscribe .icon{
   background-image: url(icons/eye-16.svg);
 }
-#octobox-delete {
+#octobox-delete .icon{
   background-image: url(icons/trash-16.svg);
 }
-#octobox-prev {
+#octobox-prev .icon{
   background-image: url(icons/arrow-left-16.svg);
 }
-#octobox-next {
+#octobox-next .icon{
   background-image: url(icons/arrow-right-16.svg);
-  background-position: right 10px top 8px;
-  padding-right: 34px;
-  padding-left: 16px;
+  margin-right: 0px;
+  margin-left: 8px;
 }
 
 #octobox-logo{
@@ -65,4 +71,7 @@
   position: absolute;
   left: 20px;
   top: 20px;
+}
+.dark #octobox-logo{
+  filter: invert(97%) sepia(12%) saturate(241%) hue-rotate(214deg) brightness(116%) contrast(87%);
 }

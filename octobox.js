@@ -197,6 +197,9 @@ function deleteNotification(notification) {
 async function render(notification) {
   var nextNotification = await loadNext(notification)
 
+  const htmlRoot = document.documentElement
+  var theme = htmlRoot.getAttribute('data-color-mode')
+
   var octoboxRoot = document.getElementById('octobox-root');
 
   if(octoboxRoot){
@@ -211,6 +214,8 @@ async function render(notification) {
     octoboxRoot.classList.add("octobox")
   }
 
+  octoboxRoot.classList.add(theme)
+
   var logo = document.createElement("a")
   logo.classList.add("mr-6")
   logo.setAttribute("id", "octobox-logo");
@@ -219,6 +224,9 @@ async function render(notification) {
 
   var prevBtn = document.createElement("a")
   prevBtn.innerText = 'Previous'
+  var icon = document.createElement("i")
+  icon.classList.add("icon")
+  prevBtn.prepend(icon)
   prevBtn.classList.add("btn")
   prevBtn.classList.add("mr-6")
   prevBtn.setAttribute("id", "octobox-prev");
@@ -244,6 +252,9 @@ async function render(notification) {
     starBtn.innerText = 'Star'
     starBtn.setAttribute("id", "octobox-star");
   }
+  var icon = document.createElement("i")
+  icon.classList.add("icon")
+  starBtn.prepend(icon)
   starBtn.classList.add("btn")
   starBtn.classList.add("mx-1")
   starBtn.classList.add("ml-6")
@@ -257,6 +268,9 @@ async function render(notification) {
   archiveBtn.classList.add("mx-1")
   archiveBtn.setAttribute("id", "octobox-archive");
   archiveBtn.innerText = 'Archive'
+  var icon = document.createElement("i")
+  icon.classList.add("icon")
+  archiveBtn.prepend(icon)
   if(notification.id){
     if(notification.archived){
       archiveBtn.innerText = 'Unarchive'
@@ -292,10 +306,16 @@ async function render(notification) {
     muteBtn.setAttribute("id", "octobox-subscribe");
     muteBtn.onclick = function(){ subscribe(notification) }
   }
+  var icon = document.createElement("i")
+  icon.classList.add("icon")
+  muteBtn.prepend(icon)
   octoboxRoot.appendChild(muteBtn)
 
   var deleteBtn = document.createElement("div")
   deleteBtn.innerText = 'Delete'
+  var icon = document.createElement("i")
+  icon.classList.add("icon")
+  deleteBtn.prepend(icon)
   deleteBtn.classList.add("btn")
   deleteBtn.classList.add("mx-1")
   deleteBtn.classList.add("mr-6")
@@ -309,6 +329,9 @@ async function render(notification) {
 
   var nextBtn = document.createElement("a")
   nextBtn.innerText = 'Next'
+  var icon = document.createElement("i")
+  icon.classList.add("icon")
+  nextBtn.append(icon)
   nextBtn.classList.add("btn")
   nextBtn.classList.add("ml-6")
   nextBtn.setAttribute("id", "octobox-next");
