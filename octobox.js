@@ -14,6 +14,12 @@ function activate() {
   if(isActionablePage()){
     authenticate()
     lookup()
+  } else {
+    var octoboxRoot = document.getElementById('octobox-root');
+
+    if(octoboxRoot){
+      octoboxRoot.remove()
+    }
   }
 }
 
@@ -323,5 +329,9 @@ activate()
 
 // load again after a pjax load
 document.addEventListener('pjax:end', () => {
+  activate()
+});
+
+document.addEventListener('pjax:popstate', () => {
   activate()
 });
