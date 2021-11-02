@@ -174,26 +174,6 @@ function subscribe(notification) {
   // TODO octobox.io doesn't know how to subscribe to something yet
 }
 
-function deleteNotification(notification) {
-  fetch('https://octobox.io/notifications/delete_selected.json?id='+notification.id, {
-    method: "POST",
-    headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'X-Octobox-API': 'true'
-      }
-    })
-    .then( resp => {
-      var nextButton = document.getElementById('octobox-next');
-      if(nextButton){
-        nextButton.click()
-      } else {
-        render({})
-      }
-    })
-    .catch( error => console.error(error))
-}
-
 async function render(notification) {
   var nextNotification = await loadNext(notification)
 
@@ -310,22 +290,6 @@ async function render(notification) {
   icon.classList.add("icon")
   muteBtn.prepend(icon)
   octoboxRoot.appendChild(muteBtn)
-
-  var deleteBtn = document.createElement("div")
-  deleteBtn.innerText = 'Delete'
-  var icon = document.createElement("i")
-  icon.classList.add("icon")
-  deleteBtn.prepend(icon)
-  deleteBtn.classList.add("btn")
-  deleteBtn.classList.add("mx-1")
-  deleteBtn.classList.add("mr-6")
-  deleteBtn.setAttribute("id", "octobox-delete");
-  if(notification.id){
-    deleteBtn.onclick = function(){ deleteNotification(notification) }
-  } else {
-    deleteBtn.classList.add("disable")
-  }
-  octoboxRoot.appendChild(deleteBtn)
 
   var nextBtn = document.createElement("a")
   nextBtn.innerText = 'Next'
