@@ -2,6 +2,8 @@
 
 Integrate [Octobox](https://octobox.io) directly into your GitHub workflow with this browser extension.
 
+Directly manage and triage through your Octobox inbox from your GitHub issues and pull requests. You can star, archive and mute notifications without needing to leave the page and quickly jump to the next and previous notifications in your inbox with a single click.
+
 <img src="screenshot.png">
 
 ## Backers
