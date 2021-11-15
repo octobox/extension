@@ -6,6 +6,12 @@ Directly manage and triage through your Octobox inbox from your GitHub issues an
 
 <img src="screenshot.png">
 
+## Installation
+
+You can currently install the browser extension from the Firefox addon site: https://addons.mozilla.org/en-GB/firefox/addon/octobox/
+
+The extension will be coming to the chrome and safari extension sites soon.
+
 ## Backers
 Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/octobox#backer)]
 
