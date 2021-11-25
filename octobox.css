@@ -1,3 +1,21 @@
+#octobox-login{
+  background-color: var(--color-canvas-default);
+	border-top: solid 1px var(--color-border-muted);
+	bottom: 0;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+	display: block;
+	padding: 10px 20px 10px 48px;
+	position: fixed;
+	left: 10px;
+  text-align: center;
+	z-index: 99999;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+  background-image: url(icons/infinitacle.svg);
+  background-repeat: no-repeat;
+  background-position: center left 10px;
+}
+
 .octobox {
   background-color: var(--color-canvas-default);
 	border-top: solid 1px var(--color-border-muted);
