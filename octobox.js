@@ -58,6 +58,7 @@ async function authenticate(cb) {
          }
        })
        var json = await resp.json()
+       // TODO if unauthorized, clear apiToken from storage 
        console.log('Octobox login:',json)
       cb(true)
      } catch {
