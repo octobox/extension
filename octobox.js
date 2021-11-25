@@ -12,60 +12,59 @@ function isActionablePage() {
   return parts.length > 4 && ['issues', 'pull'].includes(parts[3])
 }
 
-function loginPage() {
+function isloginPage() {
   // is current page octobox.io/extension
   window.location.host == 'octobox.io' && window.location.pathname == '/extension'
 }
 
-function activate() {
-  if(loginPage()){
-    console.log('logging in')
-    // grab token from page and save in storage
-  } else {if(isActionablePage()){
-    var loggedin = authenticate()
-    console.log('loggedin', loggedin)
-    if(loggedin){
-      var octoboxlogin = document.getElementById('octobox-login');
+async function activate() {
+  if(isActionablePage()){
+    authenticate(function(loggedin) {
+      console.log('loggedin', loggedin)
+      if(loggedin){
+        var octoboxlogin = document.getElementById('octobox-login');
 
-      if(octoboxlogin){
-        octoboxlogin.remove()
+        if(octoboxlogin){
+          octoboxlogin.remove()
+        }
+        lookup()
+      } else {
+        renderLoginBtn()
       }
-      lookup()
-    } else {
-      renderLoginBtn()
-    }
+    })
   } else {
     var octoboxRoot = document.getElementById('octobox-root');
 
     if(octoboxRoot){
       octoboxRoot.remove()
     }
-  }}
+  }
+  // TODO toggle display of sections on extension page
 }
 
-function authenticate() {
+async function authenticate(cb) {
   // load token from storage
-   var api_token = chrome.storage.local.get('apiToken');
-
-   if(api_token != null){
+ chrome.storage.local.get('apiToken', async function(data) {
+   api_token = data.apiToken
+   console.log(api_token)
+   if(api_token == null){
      // prompt for login
-     return false
+     cb(false)
    } else {
      try{
-       fetch('https://octobox.io/api/users/profile.json', {
+       var resp = await fetch('https://octobox.io/api/users/profile.json', {
          headers:{
            'Authorization': `Bearer ${api_token}`
          }
        })
-        .then(resp => resp.json())
-        .then( json => console.log('Octobox login:',json))
-        .catch( error => console.error(error))
-        // return true
+       var json = await resp.json()
+       console.log('Octobox login:',json)
+      cb(true)
      } catch {
-       // prompt for login
-       return false
+       cb(false)
      }
    }
+ })
 }
 
 function markAsRead(notification) {
@@ -400,4 +399,13 @@ document.addEventListener('pjax:end', () => {
 
 document.addEventListener('pjax:popstate', () => {
   activate()
+});
+
+document.addEventListener('octobox:enable', (event) => {
+  console.log('octobox', event.detail)
+  chrome.storage.local.set({
+     apiToken: event.detail.api_token
+   }, function() {
+     window.location.replace(event.detail.return_to)
+   })
 });
