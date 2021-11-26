@@ -246,10 +246,16 @@ function renderLoginBtn() {
   } else {
     var octoboxlogin = document.createElement("div");
     octoboxlogin.setAttribute("id", "octobox-login");
+    const htmlRoot = document.documentElement
+    var theme = htmlRoot.getAttribute('data-color-mode')
+    octoboxlogin.classList.add(theme)
     document.body.appendChild(octoboxlogin);
 
     var link = document.createElement("a")
     link.innerText = 'Log into Octobox'
+    var image = document.createElement("img")
+    image.src = chrome.extension.getURL("icons/infinitacle.svg");
+    link.prepend(image)
     link.setAttribute("href", `https://octobox.io/extension?return_to=${window.location}`);
 
     octoboxlogin.append(link)
@@ -258,9 +264,6 @@ function renderLoginBtn() {
 
 async function render(notification) {
   var nextNotification = await loadNext(notification)
-
-  const htmlRoot = document.documentElement
-  var theme = htmlRoot.getAttribute('data-color-mode')
 
   var octoboxRoot = document.getElementById('octobox-root');
 
@@ -276,23 +279,27 @@ async function render(notification) {
     octoboxRoot.classList.add("octobox")
   }
 
+  const htmlRoot = document.documentElement
+  var theme = htmlRoot.getAttribute('data-color-mode')
   octoboxRoot.classList.add(theme)
 
   var logo = document.createElement("a")
   logo.classList.add("mr-6")
   logo.setAttribute("id", "octobox-logo");
   logo.setAttribute("href", "https://octobox.io");
+  var image = document.createElement("img")
+  image.src = chrome.extension.getURL("icons/infinitacle.svg");
+  logo.appendChild(image)
   octoboxRoot.appendChild(logo)
 
   var prevBtn = document.createElement("a")
   prevBtn.innerText = 'Previous'
-  var icon = document.createElement("i")
-  icon.classList.add("icon")
-  prevBtn.prepend(icon)
+  var image = document.createElement("img")
+  image.src = chrome.extension.getURL("icons/arrow-left-16.svg");
+  prevBtn.prepend(image)
   prevBtn.classList.add("btn")
   prevBtn.classList.add("mr-6")
   prevBtn.setAttribute("id", "octobox-prev");
-
   if(nextNotification.previous){
     prevBtn.classList.add('tooltipped')
     prevBtn.classList.add('tooltipped-n')
@@ -303,24 +310,21 @@ async function render(notification) {
   } else {
     prevBtn.classList.add("disable")
   }
-
   octoboxRoot.appendChild(prevBtn)
 
   var starBtn = document.createElement("div")
+  var image = document.createElement("img")
   if(notification.starred){
     starBtn.innerText = 'Unstar'
-    starBtn.setAttribute("id", "octobox-unstar");
+    image.src = chrome.extension.getURL("icons/star-fill-16.svg");
   } else {
     starBtn.innerText = 'Star'
-    starBtn.setAttribute("id", "octobox-star");
+    image.src = chrome.extension.getURL("icons/star-16.svg");
   }
-  var icon = document.createElement("i")
-  icon.classList.add("icon")
-  starBtn.prepend(icon)
+  starBtn.prepend(image)
   starBtn.classList.add("btn")
   starBtn.classList.add("mx-1")
   starBtn.classList.add("ml-6")
-
   starBtn.onclick = function(){ toggleStar(notification) }
   octoboxRoot.appendChild(starBtn)
 
@@ -330,10 +334,13 @@ async function render(notification) {
   archiveBtn.classList.add("mx-1")
   archiveBtn.setAttribute("id", "octobox-archive");
   archiveBtn.innerText = 'Archive'
+  var image = document.createElement("img")
+  image.src = chrome.extension.getURL("icons/archive-16.svg");
   if(notification.id){
     if(notification.archived){
       archiveBtn.innerText = 'Unarchive'
       archiveBtn.setAttribute("id", "octobox-unarchive");
+      image.src = chrome.extension.getURL("icons/inbox-16.svg");
       archiveBtn.onclick = function(){ unarchive(notification) }
     } else {
       archiveBtn.onclick = function(){ archive(notification) }
@@ -341,14 +348,14 @@ async function render(notification) {
   } else {
     archiveBtn.classList.add("disable")
   }
-  var icon = document.createElement("i")
-  icon.classList.add("icon")
-  archiveBtn.prepend(icon)
+  archiveBtn.prepend(image)
   octoboxRoot.appendChild(archiveBtn)
 
   var muteBtn = document.createElement("div")
   muteBtn.classList.add("btn")
   muteBtn.classList.add("mx-1")
+  var image = document.createElement("img")
+  image.src = chrome.extension.getURL("icons/eye-16.svg");
   if(notification.id){
     if(notification.muted_at){
       muteBtn.innerText = 'Subscribe'
@@ -361,6 +368,7 @@ async function render(notification) {
     } else {
       muteBtn.setAttribute("id", "octobox-mute");
       muteBtn.innerText = 'Mute'
+      image.src = chrome.extension.getURL("icons/mute-16.svg");
       muteBtn.onclick = function(){ mute(notification) }
     }
   } else {
@@ -368,19 +376,17 @@ async function render(notification) {
     muteBtn.setAttribute("id", "octobox-subscribe");
     muteBtn.onclick = function(){ subscribe(notification) }
   }
-  var icon = document.createElement("i")
-  icon.classList.add("icon")
-  muteBtn.prepend(icon)
+  muteBtn.prepend(image)
   octoboxRoot.appendChild(muteBtn)
 
   var nextBtn = document.createElement("a")
   nextBtn.innerText = 'Next'
-  var icon = document.createElement("i")
-  icon.classList.add("icon")
-  nextBtn.append(icon)
   nextBtn.classList.add("btn")
   nextBtn.classList.add("ml-6")
   nextBtn.setAttribute("id", "octobox-next");
+  var image = document.createElement("img")
+  image.src = chrome.extension.getURL("icons/arrow-right-16.svg");
+  nextBtn.append(image)
   if(nextNotification.next){
     nextBtn.classList.add('tooltipped')
     nextBtn.classList.add('tooltipped-n')

@@ -4,16 +4,19 @@
 	bottom: 0;
 	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 	display: block;
-	padding: 10px 20px 10px 48px;
+	padding: 10px 20px 10px 20px;
 	position: fixed;
 	left: 10px;
   text-align: center;
 	z-index: 99999;
   border-top-right-radius: 5px;
   border-top-left-radius: 5px;
-  background-image: url(icons/infinitacle.svg);
-  background-repeat: no-repeat;
-  background-position: center left 10px;
+}
+
+#octobox-login img{
+  margin-right: 10px;
+  position: relative;
+  top: 3px;
 }
 
 .octobox {
@@ -36,7 +39,11 @@
   pointer-events: none;
 }
 
-.icon{
+.dark.octobox img, #octobox-login.dark img{
+  filter: invert(97%) sepia(12%) saturate(241%) hue-rotate(214deg) brightness(116%) contrast(87%);
+}
+
+.octobox .btn img{
   display: inline-block;
   background-repeat: no-repeat;
   background-position: center center;
@@ -46,50 +53,14 @@
   vertical-align: middle;
 }
 
-.dark .icon{
-  filter: invert(97%) sepia(12%) saturate(241%) hue-rotate(214deg) brightness(116%) contrast(87%);
-}
-
-#octobox-star .icon{
-  background-image: url(icons/star-16.svg);
-}
-#octobox-unstar .icon{
-  background-image: url(icons/star-fill-16.svg);
-}
-#octobox-archive .icon{
-  background-image: url(icons/archive-16.svg);
-}
-#octobox-unarchive .icon{
-  background-image: url(icons/inbox-16.svg);
-}
-#octobox-mute .icon{
-  background-image: url(icons/mute-16.svg);
-}
-#octobox-subscribe .icon{
-  background-image: url(icons/eye-16.svg);
-}
-#octobox-delete .icon{
-  background-image: url(icons/trash-16.svg);
-}
-#octobox-prev .icon{
-  background-image: url(icons/arrow-left-16.svg);
-}
-#octobox-next .icon{
-  background-image: url(icons/arrow-right-16.svg);
-  margin-right: 0px;
+#octobox-next img{
   margin-left: 8px;
+  margin-right: 0;
 }
 
 #octobox-logo{
-  background-image: url(icons/infinitacle.svg);
-  background-repeat: no-repeat;
-  width: 30px;
   display: inline-block;
   height: 20px;
   position: absolute;
   left: 20px;
-  top: 20px;
-}
-.dark #octobox-logo{
-  filter: invert(97%) sepia(12%) saturate(241%) hue-rotate(214deg) brightness(116%) contrast(87%);
 }
