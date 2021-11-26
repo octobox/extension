@@ -1,6 +1,3 @@
-// TODO support github enterprise
-// TODO support self-hosted octobox instances
-
 var api_token
 
 function isActionablePage() {
@@ -14,13 +11,12 @@ function isActionablePage() {
 
 function isloginPage() {
   // is current page octobox.io/extension
-  window.location.host == 'octobox.io' && window.location.pathname == '/extension'
+  return window.location.host == 'octobox.io' && window.location.pathname == '/extension'
 }
 
 async function activate() {
   if(isActionablePage()){
     authenticate(function(loggedin) {
-      console.log('loggedin', loggedin)
       if(loggedin){
         var octoboxlogin = document.getElementById('octobox-login');
 
@@ -38,17 +34,27 @@ async function activate() {
     if(octoboxRoot){
       octoboxRoot.remove()
     }
+
+    if(isloginPage()){
+      authenticate(function(loggedin) {
+        var installbox = document.getElementById('install-extension');
+        installbox.classList.add('d-none')
+        if(loggedin){
+          var installedbox = document.getElementById('installed-extension');
+          installedbox.classList.remove('d-none')
+        } else {
+          var loginbox = document.getElementById('login-extension');
+          loginbox.classList.remove('d-none')
+        }
+      })
+    }
   }
-  // TODO toggle display of sections on extension page
 }
 
 async function authenticate(cb) {
-  // load token from storage
- chrome.storage.local.get('apiToken', async function(data) {
+  chrome.storage.local.get('apiToken', async function(data) {
    api_token = data.apiToken
-   console.log(api_token)
    if(api_token == null){
-     // prompt for login
      cb(false)
    } else {
      try{
@@ -58,9 +64,13 @@ async function authenticate(cb) {
          }
        })
        var json = await resp.json()
-       // TODO if unauthorized, clear apiToken from storage 
-       console.log('Octobox login:',json)
-      cb(true)
+       if (json.error){
+         chrome.storage.local.remove('apiToken', function() {
+           cb(false)
+         })
+       } else {
+         cb(true)
+       }
      } catch {
        cb(false)
      }
@@ -403,7 +413,6 @@ document.addEventListener('pjax:popstate', () => {
 });
 
 document.addEventListener('octobox:enable', (event) => {
-  console.log('octobox', event.detail)
   chrome.storage.local.set({
      apiToken: event.detail.api_token
    }, function() {
