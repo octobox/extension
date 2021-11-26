@@ -185,12 +185,12 @@ function archive(notification) {
       }
     })
     .then( resp => {
-      notification.archived = !notification.archived;
+      notification.archived = true;
       var nextButton = document.getElementById('octobox-next');
-      if(nextButton){
-        nextButton.click()
-      } else {
+      if(nextButton.classList.contains('disable')){
         render(notification)
+      } else {
+        nextButton.click()
       }
     })
     .catch( error => console.error(error))
@@ -207,7 +207,7 @@ function unarchive(notification) {
       }
     })
     .then( resp => {
-      notification.archived = !notification.archived;
+      notification.archived = false;
       render(notification)
     })
     .catch( error => console.error(error))
@@ -330,9 +330,6 @@ async function render(notification) {
   archiveBtn.classList.add("mx-1")
   archiveBtn.setAttribute("id", "octobox-archive");
   archiveBtn.innerText = 'Archive'
-  var icon = document.createElement("i")
-  icon.classList.add("icon")
-  archiveBtn.prepend(icon)
   if(notification.id){
     if(notification.archived){
       archiveBtn.innerText = 'Unarchive'
@@ -344,6 +341,9 @@ async function render(notification) {
   } else {
     archiveBtn.classList.add("disable")
   }
+  var icon = document.createElement("i")
+  icon.classList.add("icon")
+  archiveBtn.prepend(icon)
   octoboxRoot.appendChild(archiveBtn)
 
   var muteBtn = document.createElement("div")
