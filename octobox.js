@@ -1,5 +1,4 @@
-// TODO support github enterprise
-// TODO support self-hosted octobox instances
+var api_token
 
 function isActionablePage() {
   // check if loaded on an individual issue or pull request page
@@ -10,35 +9,84 @@ function isActionablePage() {
   return parts.length > 4 && ['issues', 'pull'].includes(parts[3])
 }
 
-function activate() {
+function isloginPage() {
+  // is current page octobox.io/extension
+  return window.location.host == 'octobox.io' && window.location.pathname == '/extension'
+}
+
+async function activate() {
   if(isActionablePage()){
-    authenticate()
-    lookup()
+    authenticate(function(loggedin) {
+      if(loggedin){
+        var octoboxlogin = document.getElementById('octobox-login');
+
+        if(octoboxlogin){
+          octoboxlogin.remove()
+        }
+        lookup()
+      } else {
+        renderLoginBtn()
+      }
+    })
   } else {
     var octoboxRoot = document.getElementById('octobox-root');
 
     if(octoboxRoot){
       octoboxRoot.remove()
     }
+
+    if(isloginPage()){
+      authenticate(function(loggedin) {
+        var installbox = document.getElementById('install-extension');
+        installbox.classList.add('d-none')
+        if(loggedin){
+          var installedbox = document.getElementById('installed-extension');
+          installedbox.classList.remove('d-none')
+        } else {
+          var loginbox = document.getElementById('login-extension');
+          loginbox.classList.remove('d-none')
+        }
+      })
+    }
   }
 }
 
-function authenticate() {
-  // TODO handle failure properly
-  fetch('https://octobox.io/users/profile.json')
-   .then(resp => resp.json())
-   .then( json => console.log('Octobox login:',json))
-   .catch( error => console.error(error))
+async function authenticate(cb) {
+  chrome.storage.local.get('apiToken', async function(data) {
+   api_token = data.apiToken
+   if(api_token == null){
+     cb(false)
+   } else {
+     try{
+       var resp = await fetch('https://octobox.io/api/users/profile.json', {
+         headers:{
+           'Authorization': `Bearer ${api_token}`
+         }
+       })
+       var json = await resp.json()
+       if (json.error){
+         chrome.storage.local.remove('apiToken', function() {
+           cb(false)
+         })
+       } else {
+         cb(true)
+       }
+     } catch {
+       cb(false)
+     }
+   }
+ })
 }
 
 function markAsRead(notification) {
   if(!notification.unread){ return }
-  fetch('https://octobox.io/notifications/mark_read_selected.json?id='+notification.id, {
+  fetch('https://octobox.io/api/notifications/mark_read_selected.json?id='+notification.id, {
     method: "POST",
     headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'X-Octobox-API': 'true'
+        'X-Octobox-API': 'true',
+        'Authorization': `Bearer ${api_token}`
       }
     })
     .then( resp => console.log('notification marked as read', resp))
@@ -46,7 +94,10 @@ function markAsRead(notification) {
 }
 
 function lookup() {
-  fetch('https://octobox.io/notifications/lookup?url='+window.location)
+  fetch('https://octobox.io/api/notifications/lookup?url='+window.location, {
+    headers:{
+      'Authorization': `Bearer ${api_token}`
+    }})
    .then(resp => resp.json())
    .then(async json => {
      render(json)
@@ -72,7 +123,10 @@ async function loadNext(notification) {
     params = { per_page: 1 }
   }
 
-  var response = await fetch('https://octobox.io/notifications.json?'+ new URLSearchParams(params))
+  var response = await fetch('https://octobox.io/api/notifications.json?'+ new URLSearchParams(params), {
+    headers:{
+      'Authorization': `Bearer ${api_token}`
+    }})
   var json = await response.json()
 
   var res = {
@@ -104,12 +158,13 @@ async function loadNext(notification) {
 
 function toggleStar(notification) {
   // TODO allow starring even if notification is null
-  fetch('https://octobox.io/notifications/'+notification.id+'/star', {
+  fetch('https://octobox.io/api/notifications/'+notification.id+'/star', {
     method: "POST",
     headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'X-Octobox-API': 'true'
+        'X-Octobox-API': 'true',
+        'Authorization': `Bearer ${api_token}`
       }
     })
     .then( resp => {
@@ -120,12 +175,13 @@ function toggleStar(notification) {
 }
 
 function archive(notification) {
-  fetch('https://octobox.io/notifications/archive_selected.json?id='+notification.id, {
+  fetch('https://octobox.io/api/notifications/archive_selected.json?id='+notification.id, {
     method: "POST",
     headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'X-Octobox-API': 'true'
+        'X-Octobox-API': 'true',
+        'Authorization': `Bearer ${api_token}`
       }
     })
     .then( resp => {
@@ -141,12 +197,13 @@ function archive(notification) {
 }
 
 function unarchive(notification) {
-  fetch('https://octobox.io/notifications/archive_selected.json?value=false&id='+notification.id, {
+  fetch('https://octobox.io/api/notifications/archive_selected.json?value=false&id='+notification.id, {
     method: "POST",
     headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'X-Octobox-API': 'true'
+        'X-Octobox-API': 'true',
+        'Authorization': `Bearer ${api_token}`
       }
     })
     .then( resp => {
@@ -157,12 +214,13 @@ function unarchive(notification) {
 }
 
 function mute(notification) {
-  fetch('https://octobox.io/notifications/mute_selected.json?id='+notification.id, {
+  fetch('https://octobox.io/api/notifications/mute_selected.json?id='+notification.id, {
     method: "POST",
     headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'X-Octobox-API': 'true'
+        'X-Octobox-API': 'true',
+        'Authorization': `Bearer ${api_token}`
       }
     })
     .then( resp => {
@@ -178,6 +236,24 @@ function mute(notification) {
 
 function subscribe(notification) {
   // TODO octobox.io doesn't know how to subscribe to something yet
+}
+
+function renderLoginBtn() {
+  var octoboxlogin = document.getElementById('octobox-login');
+  if(octoboxlogin){
+    // already there
+    // TODO update link return_to param with current page
+  } else {
+    var octoboxlogin = document.createElement("div");
+    octoboxlogin.setAttribute("id", "octobox-login");
+    document.body.appendChild(octoboxlogin);
+
+    var link = document.createElement("a")
+    link.innerText = 'Log into Octobox'
+    link.setAttribute("href", `https://octobox.io/extension?return_to=${window.location}`);
+
+    octoboxlogin.append(link)
+  }
 }
 
 async function render(notification) {
@@ -334,4 +410,12 @@ document.addEventListener('pjax:end', () => {
 
 document.addEventListener('pjax:popstate', () => {
   activate()
+});
+
+document.addEventListener('octobox:enable', (event) => {
+  chrome.storage.local.set({
+     apiToken: event.detail.api_token
+   }, function() {
+     window.location.replace(event.detail.return_to)
+   })
 });
