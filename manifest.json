@@ -6,7 +6,7 @@
   "description": "Integrate Octobox directly into your GitHub workflow",
   "developer": {
     "name": "Andrew Nesbitt",
-    "url": "https://github.com/andrew"
+    "url": "https://octobox.io"
   },
   "icons": {
     "48": "icons/octobox-48.png",
