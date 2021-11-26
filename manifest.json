@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Octobox",
-  "version": "0.0.1",
+  "version": "0.0.2",
 
   "description": "Integrate Octobox directly into your GitHub workflow",
   "developer": {
