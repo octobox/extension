@@ -55,11 +55,11 @@ For other updates, follow the project on Twitter: [@octoboxio](https://twitter.c
 
 ### Vulnerability disclosure
 
-We support and encourage security research on Octobox under the terms of our [vulnerability disclosure policy](https://github.com/octobox/octobox/docs/VULNERABILITY_DISCLOSURE_POLICY.md).
+We support and encourage security research on Octobox under the terms of our [vulnerability disclosure policy](https://github.com/octobox/octobox/blob/master/docs/VULNERABILITY_DISCLOSURE_POLICY.md).
 
 ### Code of Conduct
 
-Please note that this project is released with a [Contributor Code of Conduct](https://github.com/octobox/octobox/docs/CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
+Please note that this project is released with a [Contributor Code of Conduct](https://github.com/octobox/octobox/blob/master/docs/CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
 
 ## Copyright
 
