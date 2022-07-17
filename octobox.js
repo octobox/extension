@@ -269,7 +269,7 @@ async function render(notification) {
 
   if(octoboxRoot){
     // empty it
-    octoboxRoot.innerHTML = ''
+    while (octoboxRoot.firstChild) octoboxRoot.removeChild(octoboxRoot.firstChild);
   } else {
     // create it
     document.body.style.margin = "0 0 30px 0";
