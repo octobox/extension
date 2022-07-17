@@ -11,6 +11,7 @@ Directly manage and triage through your Octobox inbox from your GitHub issues an
 You can currently install the browser extension from:
 - The Firefox addon site: https://addons.mozilla.org/en-GB/firefox/addon/octobox/
 - The Chrome webstore: https://chrome.google.com/webstore/detail/octobox/dpbajpnhgagfneijghelgldegjblinkc
+- The Opera addons site: https://addons.opera.com/en-gb/extensions/details/octobox/
 
 The extension will be coming to the chrome and safari extension sites soon.
 
