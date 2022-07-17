@@ -13,8 +13,6 @@ You can currently install the browser extension from:
 - The Chrome webstore: https://chrome.google.com/webstore/detail/octobox/dpbajpnhgagfneijghelgldegjblinkc
 - The Opera addons site: https://addons.opera.com/en-gb/extensions/details/octobox/
 
-The extension will be coming to the chrome and safari extension sites soon.
-
 ## Backers
 Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/octobox#backer)]
 
