@@ -1,10 +1,9 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Octobox",
-  "version": "0.0.3",
-
+  "version": "1.0.0",
   "description": "Integrate Octobox directly into your GitHub workflow",
-  "developer": {
+  "author": {
     "name": "Andrew Nesbitt",
     "url": "https://octobox.io"
   },
@@ -12,7 +11,6 @@
     "48": "icons/octobox-48.png",
     "96": "icons/octobox-96.png"
   },
-
   "content_scripts": [
     {
       "matches": ["*://*.github.com/*", "*://octobox.io/*"],
@@ -20,13 +18,14 @@
       "css": ["octobox.css"]
     }
   ],
-
+  "host_permissions": [
+    "*://octobox.io/*"
+  ],
   "permissions": [
-    "*://octobox.io/*",
     "storage"
   ],
-
-  "web_accessible_resources": [
-      "icons/*"
-    ]
+  "web_accessible_resources": [{
+    "resources": ["icons/*"],
+    "matches": ["*://*.github.com/*", "*://octobox.io/*"]
+  }]
 }
