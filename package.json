@@ -1,0 +1,9 @@
+{
+  "name": "octobox-extension",
+  "version": "1.0.0",
+  "description": "Integrate [Octobox](https://octobox.io) directly into your GitHub workflow with this browser extension.",
+  "main": "octobox.js",
+  "scripts": {
+    "lint": "npx web-ext lint"
+  }
+}
