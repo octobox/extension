@@ -1,6 +1,6 @@
 #octobox-login{
-  background-color: var(--color-canvas-default);
-	border-top: solid 1px var(--color-border-muted);
+  background-color: var(--bgColor-default, var(--color-canvas-default));
+	border-top: 1px solid var(--borderColor-muted, var(--color-border-muted));
 	bottom: 0;
 	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 	display: block;
@@ -20,8 +20,8 @@
 }
 
 .octobox {
-  background-color: var(--color-canvas-default);
-	border-top: solid 1px var(--color-border-muted);
+  background-color: var(--bgColor-default, var(--color-canvas-default));
+	border-top: 1px solid var(--borderColor-muted, var(--color-border-muted));
 	bottom: 0;
 	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 	display: block;
